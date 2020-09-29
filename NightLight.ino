@@ -9,10 +9,10 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 
 // SET START/END TIMES HERE
 // Normal hours
-const int START_HOUR = 19;
-const int START_MIN = 00;
-const int END_HOUR = 1;
-const int END_MIN = 30;
+const int START_HOUR = 18;
+const int START_MIN = 45;
+const int END_HOUR = 19;
+const int END_MIN = 28;
 // Weekend
 const int WEEKEND_END_HOUR = 2;
 const int WEEKEND_END_MIN = 15;
@@ -29,7 +29,7 @@ TimeSpan final_warning_time = TimeSpan(0, 0, FINAL_WARN_MIN, 0);
 RTC_DS1307 rtc;
 ezButton button(BTN_PIN);  // create ezButton object that attach to pin 7;
 
-bool LEDs_on = false;
+volatile bool LEDs_on = false;
 
 void setup() {
   pinMode(LED1_PIN, OUTPUT);
@@ -195,22 +195,25 @@ void loop() {
         switching_off = true;
       }
     }
+    
     // Fade on and off
     if(!LEDs_on && switching_on){
       fade_on();
       LEDs_on = true;
       switched_on = true;
+      switching_on = false;
     } else if (LEDs_on && switching_off){
       fade_off();
       LEDs_on = false;
       switched_on = false;
+      switching_off = false;
     }
     
     if(button.isPressed()) {
 
       switched_on = !switched_on;   
   
-      // control LED arccoding to the toggleed sate
+      // control LED arccoding to the toggled sate
       digitalWrite(LED1_PIN, switched_on); 
       digitalWrite(LED2_PIN, switched_on);
     }

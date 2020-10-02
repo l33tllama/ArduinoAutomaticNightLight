@@ -11,8 +11,8 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 // Normal hours
 const int START_HOUR = 18;
 const int START_MIN = 45;
-const int END_HOUR = 19;
-const int END_MIN = 28;
+const int END_HOUR = 1;
+const int END_MIN = 30;
 // Weekend
 const int WEEKEND_END_HOUR = 2;
 const int WEEKEND_END_MIN = 15;
@@ -22,6 +22,8 @@ const int FIRST_WARN_MIN = 5;
 const unsigned int FINAL_WARN_MIN = 1;
 
 bool switched_on = false;
+bool switching_on = false;
+bool switching_off = false;
 
 TimeSpan first_warning_time = TimeSpan(0, 0, FIRST_WARN_MIN, 0);
 TimeSpan final_warning_time = TimeSpan(0, 0, FINAL_WARN_MIN, 0);
@@ -136,8 +138,6 @@ void loop() {
     unsigned int fin_sec = final_warning.second();
     unsigned int dow = now.dayOfTheWeek();
     bool weekend = false;
-    bool switching_on = false;
-    bool switching_off = false;
 
     
     // TODO: better weekend calculation based on current time (eg. if before 12, after 12)
@@ -152,12 +152,12 @@ void loop() {
     } 
     if(weekend){
       off_time = DateTime(now.year(), now.month(), now.day(), WEEKEND_END_HOUR, WEEKEND_END_MIN, 0);
-      if(WEEKEND_END_HOUR >= 0 && WEEKEND_END_HOUR < 12){
+      if(hour > 12 && WEEKEND_END_HOUR >= 0 && WEEKEND_END_HOUR < 12){
         off_time = off_time + TimeSpan(1, 0, 0, 0);
       }
     } else {
       off_time = DateTime(now.year(), now.month(), now.day(), END_HOUR, END_MIN, 0);
-      if(END_HOUR >= 0 && END_HOUR < 12){
+      if(hour > 12 && END_HOUR >= 0 && END_HOUR < 12){
         off_time = off_time + TimeSpan(1, 0, 0, 0);
       }
     }
